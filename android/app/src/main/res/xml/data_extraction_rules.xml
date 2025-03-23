@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Include shared preferences -->
+        <include domain="sharedpref" path="."/>
+        
+        <!-- Include app's internal storage -->
+        <include domain="file" path="."/>
+        
+        <!-- Include database -->
+        <include domain="database" path="."/>
+        
+        <!-- Exclude cache directory -->
+        <exclude domain="file" path="cache/"/>
+        <exclude domain="file" path="code_cache/"/>
+        
+        <!-- Exclude temporary files -->
+        <exclude domain="file" path="temp/"/>
+        
+        <!-- Exclude downloaded files that can be re-downloaded -->
+        <exclude domain="file" path="downloads/"/>
+    </cloud-backup>
+    
+    <device-transfer>
+        <!-- Include all app data for device-to-device transfer -->
+        <include domain="root" path="."/>
+        
+        <!-- Exclude cache and temporary files -->
+        <exclude domain="file" path="cache/"/>
+        <exclude domain="file" path="code_cache/"/>
+        <exclude domain="file" path="temp/"/>
+    </device-transfer>
+</data-extraction-rules>
