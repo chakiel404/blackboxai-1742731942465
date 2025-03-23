@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartApp Admin Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 3.5rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+        .stat-card {
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar -->
+    <nav class="sidebar bg-white w-64">
+        <div class="px-6 py-4">
+            <h1 class="text-xl font-bold text-gray-800">SmartApp Admin</h1>
+        </div>
+        <div class="mt-6">
+            <ul class="space-y-2">
+                <li>
+                    <a href="dashboard.html" class="flex items-center px-6 py-3 text-gray-700 bg-gray-100">
+                        <i class="fas fa-tachometer-alt w-5"></i>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="user-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-users w-5"></i>
+                        <span class="ml-3">User Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="subject-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-book w-5"></i>
+                        <span class="ml-3">Subject Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="material-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-file-alt w-5"></i>
+                        <span class="ml-3">Learning Materials</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="quiz-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-question-circle w-5"></i>
+                        <span class="ml-3">Quiz Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-cog w-5"></i>
+                        <span class="ml-3">Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="logoutBtn" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt w-5"></i>
+                        <span class="ml-3">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Dashboard Overview</h2>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-600">Welcome, Admin</span>
+                <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" 
+                     alt="Admin" 
+                     class="w-8 h-8 rounded-full">
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="stat-card bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-blue-100 rounded-full">
+                        <i class="fas fa-user-graduate text-blue-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Total Students</h3>
+                        <p class="text-2xl font-semibold text-gray-800" id="totalStudents">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-green-100 rounded-full">
+                        <i class="fas fa-chalkboard-teacher text-green-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Total Teachers</h3>
+                        <p class="text-2xl font-semibold text-gray-800" id="totalTeachers">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-purple-100 rounded-full">
+                        <i class="fas fa-book text-purple-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Total Subjects</h3>
+                        <p class="text-2xl font-semibold text-gray-800" id="totalSubjects">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-yellow-100 rounded-full">
+                        <i class="fas fa-file-alt text-yellow-600"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-gray-500 text-sm">Total Materials</h3>
+                        <p class="text-2xl font-semibold text-gray-800" id="totalMaterials">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities & Quick Actions -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Recent Activities -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Activities</h3>
+                <div class="space-y-4" id="recentActivities">
+                    <div class="animate-pulse">
+                        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                        <div class="space-y-3 mt-4">
+                            <div class="h-4 bg-gray-200 rounded"></div>
+                            <div class="h-4 bg-gray-200 rounded"></div>
+                            <div class="h-4 bg-gray-200 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <button class="flex items-center justify-center p-4 bg-blue-50 rounded-lg text-blue-600 hover:bg-blue-100">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Add New User
+                    </button>
+                    <button class="flex items-center justify-center p-4 bg-green-50 rounded-lg text-green-600 hover:bg-green-100">
+                        <i class="fas fa-book-medical mr-2"></i>
+                        Add Subject
+                    </button>
+                    <button class="flex items-center justify-center p-4 bg-purple-50 rounded-lg text-purple-600 hover:bg-purple-100">
+                        <i class="fas fa-file-upload mr-2"></i>
+                        Upload Material
+                    </button>
+                    <button class="flex items-center justify-center p-4 bg-yellow-50 rounded-lg text-yellow-600 hover:bg-yellow-100">
+                        <i class="fas fa-cog mr-2"></i>
+                        System Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Fetch dashboard data
+            fetchDashboardData();
+
+            // Logout handler
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            });
+        });
+
+        async function fetchDashboardData() {
+            try {
+                const token = localStorage.getItem('token');
+                const headers = {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                };
+
+                // Fetch statistics
+                const statsResponse = await fetch('/api/stats', { headers });
+                const statsData = await statsResponse.json();
+
+                if (statsData.status === 'success') {
+                    document.getElementById('totalStudents').textContent = statsData.data.students || 0;
+                    document.getElementById('totalTeachers').textContent = statsData.data.teachers || 0;
+                    document.getElementById('totalSubjects').textContent = statsData.data.subjects || 0;
+                    document.getElementById('totalMaterials').textContent = statsData.data.materials || 0;
+                }
+
+                // Fetch recent activities
+                const activitiesResponse = await fetch('/api/activities', { headers });
+                const activitiesData = await activitiesResponse.json();
+
+                if (activitiesData.status === 'success') {
+                    const activitiesHtml = activitiesData.data.map(activity => `
+                        <div class="flex items-center py-3 border-b border-gray-100">
+                            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                <i class="fas ${getActivityIcon(activity.type)} text-gray-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-800">${activity.description}</p>
+                                <p class="text-xs text-gray-500">${formatDate(activity.timestamp)}</p>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    document.getElementById('recentActivities').innerHTML = activitiesHtml;
+                }
+
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+                // Show error notification
+            }
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'user': 'fa-user',
+                'subject': 'fa-book',
+                'material': 'fa-file-alt',
+                'quiz': 'fa-question-circle',
+                'default': 'fa-info-circle'
+            };
+            return icons[type] || icons.default;
+        }
+
+        function formatDate(timestamp) {
+            return new Date(timestamp).toLocaleString();
+        }
+    </script>
+</body>
+</html>
