@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - SmartApp Admin</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 3.5rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+        .settings-card {
+            transition: all 0.3s ease;
+        }
+        .settings-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar (Same as dashboard.html) -->
+    <nav class="sidebar bg-white w-64">
+        <div class="px-6 py-4">
+            <h1 class="text-xl font-bold text-gray-800">SmartApp Admin</h1>
+        </div>
+        <div class="mt-6">
+            <ul class="space-y-2">
+                <li>
+                    <a href="dashboard.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-tachometer-alt w-5"></i>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="user-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-users w-5"></i>
+                        <span class="ml-3">User Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="subject-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-book w-5"></i>
+                        <span class="ml-3">Subject Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="material-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-file-alt w-5"></i>
+                        <span class="ml-3">Learning Materials</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="quiz-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-question-circle w-5"></i>
+                        <span class="ml-3">Quiz Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html" class="flex items-center px-6 py-3 text-gray-700 bg-gray-100">
+                        <i class="fas fa-cog w-5"></i>
+                        <span class="ml-3">Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="logoutBtn" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt w-5"></i>
+                        <span class="ml-3">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">System Settings</h2>
+            <div>
+                <button class="btn btn-secondary me-2" id="resetDefaultsBtn">
+                    <i class="fas fa-undo mr-2"></i>Reset to Defaults
+                </button>
+                <button class="btn btn-primary" id="saveSettingsBtn">
+                    <i class="fas fa-save mr-2"></i>Save Changes
+                </button>
+            </div>
+        </div>
+
+        <!-- Settings Sections -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- General Settings -->
+            <div class="settings-card bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-cog mr-2"></i>General Settings
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="form-label">Application Name</label>
+                        <input type="text" id="appName" class="form-control" data-setting="public.app_name">
+                    </div>
+                    <div>
+                        <label class="form-label">School Name</label>
+                        <input type="text" id="schoolName" class="form-control" data-setting="public.school_name">
+                    </div>
+                    <div>
+                        <label class="form-label">School Address</label>
+                        <textarea id="schoolAddress" class="form-control" rows="2" data-setting="public.school_address"></textarea>
+                    </div>
+                    <div>
+                        <label class="form-label">Contact Email</label>
+                        <input type="email" id="contactEmail" class="form-control" data-setting="public.contact_email">
+                    </div>
+                    <div>
+                        <label class="form-label">Contact Phone</label>
+                        <input type="text" id="contactPhone" class="form-control" data-setting="public.contact_phone">
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Settings -->
+            <div class="settings-card bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-server mr-2"></i>System Settings
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="form-label">Maximum File Size (MB)</label>
+                        <input type="number" id="maxFileSize" class="form-control" min="1" max="50" data-setting="system.max_file_size">
+                        <small class="text-muted">Maximum allowed file size for uploads (1-50 MB)</small>
+                    </div>
+                    <div>
+                        <label class="form-label">Allowed File Types</label>
+                        <select id="allowedFileTypes" class="form-select" multiple data-setting="system.allowed_file_types">
+                            <option value="pdf">PDF</option>
+                            <option value="doc">DOC</option>
+                            <option value="docx">DOCX</option>
+                            <option value="ppt">PPT</option>
+                            <option value="pptx">PPTX</option>
+                            <option value="jpg">JPG</option>
+                            <option value="png">PNG</option>
+                        </select>
+                        <small class="text-muted">Hold Ctrl/Cmd to select multiple types</small>
+                    </div>
+                    <div>
+                        <label class="form-label">Default Quiz Duration (minutes)</label>
+                        <input type="number" id="defaultQuizDuration" class="form-control" min="1" data-setting="system.default_quiz_duration">
+                    </div>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" id="maintenanceMode" class="form-check-input" data-setting="system.maintenance_mode">
+                        <label class="form-check-label">Maintenance Mode</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification Settings -->
+            <div class="settings-card bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-bell mr-2"></i>Notification Settings
+                </h3>
+                <div class="space-y-4">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" id="emailNotifications" class="form-check-input" data-setting="notification.email_enabled">
+                        <label class="form-check-label">Enable Email Notifications</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" id="smsNotifications" class="form-check-input" data-setting="notification.sms_enabled">
+                        <label class="form-check-label">Enable SMS Notifications</label>
+                    </div>
+                    <div>
+                        <label class="form-label">SMTP Host</label>
+                        <input type="text" id="smtpHost" class="form-control" data-setting="notification.smtp_host">
+                    </div>
+                    <div>
+                        <label class="form-label">SMTP Port</label>
+                        <input type="number" id="smtpPort" class="form-control" data-setting="notification.smtp_port">
+                    </div>
+                    <div>
+                        <label class="form-label">SMTP Username</label>
+                        <input type="text" id="smtpUsername" class="form-control" data-setting="notification.smtp_username">
+                    </div>
+                    <div>
+                        <label class="form-label">SMTP Password</label>
+                        <input type="password" id="smtpPassword" class="form-control" data-setting="notification.smtp_password">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="settings-card bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-shield-alt mr-2"></i>Security Settings
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="form-label">Session Timeout (minutes)</label>
+                        <input type="number" id="sessionTimeout" class="form-control" min="1" data-setting="security.session_timeout">
+                    </div>
+                    <div>
+                        <label class="form-label">Maximum Login Attempts</label>
+                        <input type="number" id="maxLoginAttempts" class="form-control" min="1" data-setting="security.max_login_attempts">
+                    </div>
+                    <div>
+                        <label class="form-label">Password Policy</label>
+                        <div class="form-check">
+                            <input type="checkbox" id="requireUppercase" class="form-check-input" data-setting="security.password_uppercase">
+                            <label class="form-check-label">Require uppercase letters</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="requireNumbers" class="form-check-input" data-setting="security.password_numbers">
+                            <label class="form-check-label">Require numbers</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="requireSpecial" class="form-check-input" data-setting="security.password_special">
+                            <label class="form-check-label">Require special characters</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Minimum Password Length</label>
+                        <input type="number" id="minPasswordLength" class="form-control" min="6" data-setting="security.min_password_length">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load settings
+            loadSettings();
+
+            // Setup event listeners
+            document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
+            document.getElementById('resetDefaultsBtn').addEventListener('click', resetDefaults);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+
+            // Setup form validation
+            setupFormValidation();
+        });
+
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/settings', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    populateSettings(data.data);
+                } else {
+                    throw new Error(data.message);
+                }
+
+            } catch (error) {
+                showAlert('error', 'Failed to load settings: ' + error.message);
+            }
+        }
+
+        function populateSettings(settings) {
+            // Populate all input fields with their corresponding settings
+            document.querySelectorAll('[data-setting]').forEach(input => {
+                const settingKey = input.dataset.setting;
+                const value = settings[settingKey];
+
+                if (input.type === 'checkbox') {
+                    input.checked = value === true || value === 'true';
+                } else if (input.tagName === 'SELECT' && input.multiple) {
+                    // Handle multiple select
+                    const values = Array.isArray(value) ? value : JSON.parse(value);
+                    Array.from(input.options).forEach(option => {
+                        option.selected = values.includes(option.value);
+                    });
+                } else {
+                    input.value = value || '';
+                }
+            });
+        }
+
+        async function saveSettings() {
+            try {
+                const settings = {};
+
+                // Gather all settings from input fields
+                document.querySelectorAll('[data-setting]').forEach(input => {
+                    const settingKey = input.dataset.setting;
+                    let value;
+
+                    if (input.type === 'checkbox') {
+                        value = input.checked;
+                    } else if (input.tagName === 'SELECT' && input.multiple) {
+                        value = Array.from(input.selectedOptions).map(option => option.value);
+                    } else {
+                        value = input.value;
+                    }
+
+                    settings[settingKey] = value;
+                });
+
+                const response = await fetch('/api/settings', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ settings })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showAlert('success', 'Settings saved successfully');
+                    populateSettings(data.data);
+                } else {
+                    throw new Error(data.message);
+                }
+
+            } catch (error) {
+                showAlert('error', 'Failed to save settings: ' + error.message);
+            }
+        }
+
+        async function resetDefaults() {
+            if (confirm('Are you sure you want to reset all settings to their default values?')) {
+                try {
+                    const response = await fetch('/api/settings/initialize', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        showAlert('success', 'Settings reset to defaults');
+                        populateSettings(data.data);
+                    } else {
+                        throw new Error(data.message);
+                    }
+
+                } catch (error) {
+                    showAlert('error', 'Failed to reset settings: ' + error.message);
+                }
+            }
+        }
+
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show fixed-top m-3`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        function setupFormValidation() {
+            // Add input validation as needed
+            document.querySelectorAll('input[type="email"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    this.setCustomValidity('');
+                    if (!this.checkValidity()) {
+                        this.setCustomValidity('Please enter a valid email address');
+                    }
+                });
+            });
+
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    const min = parseInt(this.min);
+                    const max = parseInt(this.max);
+                    const value = parseInt(this.value);
+
+                    this.setCustomValidity('');
+                    if (min && value < min) {
+                        this.setCustomValidity(`Value must be at least ${min}`);
+                    } else if (max && value > max) {
+                        this.setCustomValidity(`Value must not exceed ${max}`);
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
