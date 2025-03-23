@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_subjects"
+        android:icon="@drawable/ic_subject"
+        android:title="@string/title_subjects" />
+
+    <item
+        android:id="@+id/navigation_materials"
+        android:icon="@drawable/ic_material"
+        android:title="@string/title_materials" />
+
+    <item
+        android:id="@+id/navigation_quizzes"
+        android:icon="@drawable/ic_quiz"
+        android:title="@string/title_quizzes" />
+
+    <item
+        android:id="@+id/navigation_assignments"
+        android:icon="@drawable/ic_assignment"
+        android:title="@string/title_assignments" />
+</menu>
