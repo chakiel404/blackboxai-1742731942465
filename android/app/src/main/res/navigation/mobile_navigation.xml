@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_subjects">
+
+    <fragment
+        android:id="@+id/navigation_subjects"
+        android:name="com.smartapp.ui.subject.SubjectListFragment"
+        android:label="@string/title_subjects" />
+
+    <fragment
+        android:id="@+id/navigation_materials"
+        android:name="com.smartapp.ui.material.MaterialListFragment"
+        android:label="@string/title_materials" />
+
+    <fragment
+        android:id="@+id/navigation_quizzes"
+        android:name="com.smartapp.ui.quiz.QuizListFragment"
+        android:label="@string/title_quizzes" />
+
+    <fragment
+        android:id="@+id/navigation_assignments"
+        android:name="com.smartapp.ui.assignment.AssignmentListFragment"
+        android:label="@string/title_assignments" />
+
+</navigation>
