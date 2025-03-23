@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Management - SmartApp Admin</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 3.5rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+        .quiz-card {
+            transition: all 0.3s ease;
+        }
+        .quiz-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .question-editor {
+            height: 150px;
+            margin-bottom: 1rem;
+        }
+        .option-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .option-row .form-check {
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar (Same as dashboard.html) -->
+    <nav class="sidebar bg-white w-64">
+        <div class="px-6 py-4">
+            <h1 class="text-xl font-bold text-gray-800">SmartApp Admin</h1>
+        </div>
+        <div class="mt-6">
+            <ul class="space-y-2">
+                <li>
+                    <a href="dashboard.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-tachometer-alt w-5"></i>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="user-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-users w-5"></i>
+                        <span class="ml-3">User Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="subject-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-book w-5"></i>
+                        <span class="ml-3">Subject Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="material-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-file-alt w-5"></i>
+                        <span class="ml-3">Learning Materials</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="quiz-management.html" class="flex items-center px-6 py-3 text-gray-700 bg-gray-100">
+                        <i class="fas fa-question-circle w-5"></i>
+                        <span class="ml-3">Quiz Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-cog w-5"></i>
+                        <span class="ml-3">Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="logoutBtn" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt w-5"></i>
+                        <span class="ml-3">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Quiz Management</h2>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addQuizModal">
+                <i class="fas fa-plus mr-2"></i>Create New Quiz
+            </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                    <select id="subjectFilter" class="form-select">
+                        <option value="">All Subjects</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select id="statusFilter" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="draft">Draft</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search quizzes...">
+                </div>
+                <div class="flex items-end">
+                    <button id="resetFilters" class="btn btn-secondary w-full">
+                        <i class="fas fa-undo mr-2"></i>Reset Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quizzes Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="quizzesGrid">
+            <!-- Quizzes will be loaded here -->
+            <div class="animate-pulse">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div class="space-y-3 mt-4">
+                        <div class="h-4 bg-gray-200 rounded"></div>
+                        <div class="h-4 bg-gray-200 rounded"></div>
+                        <div class="h-4 bg-gray-200 rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-6">
+            <nav id="pagination" aria-label="Page navigation">
+                <!-- Pagination will be loaded here -->
+            </nav>
+        </div>
+    </main>
+
+    <!-- Add/Edit Quiz Modal -->
+    <div class="modal fade" id="addQuizModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Create New Quiz</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="quizForm">
+                        <input type="hidden" id="quizId">
+                        <!-- Quiz Details -->
+                        <div class="mb-4">
+                            <h6 class="font-semibold mb-3">Quiz Details</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Title</label>
+                                    <input type="text" id="quizTitle" class="form-control" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Subject</label>
+                                    <select id="quizSubject" class="form-select" required>
+                                        <option value="">Select Subject</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Duration (minutes)</label>
+                                    <input type="number" id="quizDuration" class="form-control" required min="1">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select id="quizStatus" class="form-select" required>
+                                        <option value="draft">Draft</option>
+                                        <option value="active">Active</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea id="quizDescription" class="form-control" rows="3" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Questions Section -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="font-semibold">Questions</h6>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="addQuestionBtn">
+                                    <i class="fas fa-plus mr-1"></i>Add Question
+                                </button>
+                            </div>
+                            <div id="questionsContainer">
+                                <!-- Questions will be added here -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveQuiz">Save Quiz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Quiz</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this quiz? This will also delete all associated questions and student attempts.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Results Modal -->
+    <div class="modal fade" id="resultsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Quiz Results</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Score</th>
+                                    <th>Completion Time</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTable">
+                                <!-- Results will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Rich Text Editor -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        let currentPage = 1;
+        let currentQuizId = null;
+        let questionEditors = [];
+        const addQuizModal = new bootstrap.Modal(document.getElementById('addQuizModal'));
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        const resultsModal = new bootstrap.Modal(document.getElementById('resultsModal'));
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load initial data
+            loadQuizzes();
+            loadSubjects();
+
+            // Setup event listeners
+            document.getElementById('searchInput').addEventListener('input', debounce(loadQuizzes, 500));
+            document.getElementById('subjectFilter').addEventListener('change', loadQuizzes);
+            document.getElementById('statusFilter').addEventListener('change', loadQuizzes);
+            document.getElementById('resetFilters').addEventListener('click', resetFilters);
+            document.getElementById('addQuestionBtn').addEventListener('click', addQuestion);
+            document.getElementById('saveQuiz').addEventListener('click', saveQuiz);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+
+            // Setup form validation
+            setupFormValidation();
+        });
+
+        async function loadQuizzes() {
+            try {
+                const search = document.getElementById('searchInput').value;
+                const subject = document.getElementById('subjectFilter').value;
+                const status = document.getElementById('statusFilter').value;
+
+                const response = await fetch(
+                    `/api/quizzes?search=${search}&subject_id=${subject}&status=${status}&page=${currentPage}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    renderQuizzes(data.data.quizzes);
+                    renderPagination(data.data.pagination);
+                } else {
+                    throw new Error(data.message);
+                }
+
+            } catch (error) {
+                showAlert('error', 'Failed to load quizzes: ' + error.message);
+            }
+        }
+
+        function renderQuizzes(quizzes) {
+            const grid = document.getElementById('quizzesGrid');
+            grid.innerHTML = quizzes.map(quiz => `
+                <div class="quiz-card bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">${quiz.title}</h3>
+                                <p class="text-sm text-gray-500">${quiz.subject_name}</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="editQuiz(${quiz.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-info" onclick="viewResults(${quiz.id})">
+                                    <i class="fas fa-chart-bar"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteQuiz(${quiz.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">${quiz.description}</p>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="text-center p-3 bg-gray-50 rounded">
+                                <p class="text-sm text-gray-500">Questions</p>
+                                <p class="text-lg font-semibold">${quiz.question_count}</p>
+                            </div>
+                            <div class="text-center p-3 bg-gray-50 rounded">
+                                <p class="text-sm text-gray-500">Duration</p>
+                                <p class="text-lg font-semibold">${quiz.duration_minutes} min</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="px-2 py-1 rounded-full ${getStatusBadgeClass(quiz.status)}">
+                                ${quiz.status}
+                            </span>
+                            <span class="text-gray-500">${formatDate(quiz.created_at)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusBadgeClass(status) {
+            switch (status.toLowerCase()) {
+                case 'active': return 'bg-green-100 text-green-800';
+                case 'draft': return 'bg-gray-100 text-gray-800';
+                case 'completed': return 'bg-blue-100 text-blue-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function addQuestion() {
+            const container = document.getElementById('questionsContainer');
+            const questionId = Date.now(); // Unique ID for the question
+            
+            const questionHtml = `
+                <div class="question-block border rounded p-4 mb-4" data-question-id="${questionId}">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h6 class="font-semibold">Question ${container.children.length + 1}</h6>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeQuestion(${questionId})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Question Text</label>
+                        <div id="editor-${questionId}" class="question-editor"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Question Type</label>
+                        <select class="form-select" onchange="toggleQuestionType(${questionId})" required>
+                            <option value="multiple_choice">Multiple Choice</option>
+                            <option value="essay">Essay</option>
+                        </select>
+                    </div>
+                    <div class="options-container" id="options-${questionId}">
+                        <label class="form-label">Options</label>
+                        <div class="option-list mb-3">
+                            <div class="option-row">
+                                <div class="form-check">
+                                    <input type="radio" name="correct-${questionId}" class="form-check-input" required>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Option text" required>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addOption(${questionId})">
+                            Add Option
+                        </button>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Points</label>
+                        <input type="number" class="form-control" value="1" min="1" required>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', questionHtml);
+            
+            // Initialize Quill editor for the new question
+            const editor = new Quill(`#editor-${questionId}`, {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                }
+            });
+            
+            questionEditors.push({ id: questionId, editor: editor });
+        }
+
+        function removeQuestion(questionId) {
+            const question = document.querySelector(`[data-question-id="${questionId}"]`);
+            question.remove();
+            
+            // Remove editor from array
+            questionEditors = questionEditors.filter(e => e.id !== questionId);
+            
+            // Renumber remaining questions
+            const questions = document.querySelectorAll('.question-block');
+            questions.forEach((q, index) => {
+                q.querySelector('h6').textContent = `Question ${index + 1}`;
+            });
+        }
+
+        function toggleQuestionType(questionId) {
+            const select = event.target;
+            const optionsContainer = document.getElementById(`options-${questionId}`);
+            optionsContainer.style.display = select.value === 'multiple_choice' ? 'block' : 'none';
+        }
+
+        function addOption(questionId) {
+            const optionList = document.querySelector(`#options-${questionId} .option-list`);
+            const optionHtml = `
+                <div class="option-row">
+                    <div class="form-check">
+                        <input type="radio" name="correct-${questionId}" class="form-check-input" required>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Option text" required>
+                    <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="removeOption(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            optionList.insertAdjacentHTML('beforeend', optionHtml);
+        }
+
+        function removeOption(button) {
+            button.closest('.option-row').remove();
+        }
+
+        async function saveQuiz() {
+            try {
+                const quizData = {
+                    title: document.getElementById('quizTitle').value,
+                    description: document.getElementById('quizDescription').value,
+                    subject_id: document.getElementById('quizSubject').value,
+                    duration_minutes: document.getElementById('quizDuration').value,
+                    status: document.getElementById('quizStatus').value,
+                    questions: []
+                };
+
+                // Gather questions data
+                document.querySelectorAll('.question-block').forEach(questionBlock => {
+                    const questionId = questionBlock.dataset.questionId;
+                    const editor = questionEditors.find(e => e.id === parseInt(questionId)).editor;
+                    
+                    const question = {
+                        question_text: editor.root.innerHTML,
+                        question_type: questionBlock.querySelector('select').value,
+                        points: questionBlock.querySelector('input[type="number"]').value
+                    };
+
+                    if (question.question_type === 'multiple_choice') {
+                        const options = [];
+                        let correctAnswer = null;
+                        
+                        questionBlock.querySelectorAll('.option-row').forEach(row => {
+                            const optionText = row.querySelector('input[type="text"]').value;
+                            const isCorrect = row.querySelector('input[type="radio"]').checked;
+                            
+                            options.push(optionText);
+                            if (isCorrect) correctAnswer = optionText;
+                        });
+
+                        question.options = options;
+                        question.correct_answer = correctAnswer;
+                    }
+
+                    quizData.questions.push(question);
+                });
+
+                const url = currentQuizId ? `/api/quizzes/${currentQuizId}` : '/api/quizzes';
+                const method = currentQuizId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(quizData)
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    addQuizModal.hide();
+                    loadQuizzes();
+                    showAlert('success', `Quiz ${currentQuizId ? 'updated' : 'created'} successfully`);
+                } else {
+                    throw new Error(data.message);
+                }
+
+            } catch (error) {
+                showAlert('error', error.message);
+            }
+        }
+
+        async function viewResults(quizId) {
+            try {
+                const response = await fetch(`/api/quizzes/${quizId}/results`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    const results = data.data;
+                    document.getElementById('resultsTable').innerHTML = results.map(result => `
+                        <tr>
+                            <td>${result.student_name}</td>
+                            <td>${result.score}%</td>
+                            <td>${formatDuration(result.completion_time)}</td>
+                            <td>
+                                <span class="badge ${result.status === 'completed' ? 'bg-success' : 'bg-warning'}">
+                                    ${result.status}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" onclick="viewAttempt(${result.attempt_id})">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    
+                    resultsModal.show();
+                } else {
+                    throw new Error(data.message);
+                }
+
+            } catch (error) {
+                showAlert('error', error.message);
+            }
+        }
+
+        function formatDuration(minutes) {
+            const hrs = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hrs}h ${mins}m`;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show fixed-top m-3`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        function setupFormValidation() {
+            const form = document.getElementById('quizForm');
+            const saveButton = document.getElementById('saveQuiz');
+
+            form.addEventListener('input', () => {
+                const isValid = form.checkValidity();
+                saveButton.disabled = !isValid;
+            });
+
+            // Reset form when modal is closed
+            document.getElementById('addQuizModal').addEventListener('hidden.bs.modal', () => {
+                form.reset();
+                document.getElementById('questionsContainer').innerHTML = '';
+                questionEditors = [];
+                currentQuizId = null;
+                document.getElementById('modalTitle').textContent = 'Create New Quiz';
+            });
+        }
+    </script>
+</body>
+</html>
