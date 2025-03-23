@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Management - SmartApp Admin</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 3.5rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+        .subject-card {
+            transition: all 0.3s ease;
+        }
+        .subject-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .select2-container {
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar (Same as dashboard.html) -->
+    <nav class="sidebar bg-white w-64">
+        <div class="px-6 py-4">
+            <h1 class="text-xl font-bold text-gray-800">SmartApp Admin</h1>
+        </div>
+        <div class="mt-6">
+            <ul class="space-y-2">
+                <li>
+                    <a href="dashboard.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-tachometer-alt w-5"></i>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="user-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-users w-5"></i>
+                        <span class="ml-3">User Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="subject-management.html" class="flex items-center px-6 py-3 text-gray-700 bg-gray-100">
+                        <i class="fas fa-book w-5"></i>
+                        <span class="ml-3">Subject Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="material-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-file-alt w-5"></i>
+                        <span class="ml-3">Learning Materials</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="quiz-management.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-question-circle w-5"></i>
+                        <span class="ml-3">Quiz Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-cog w-5"></i>
+                        <span class="ml-3">Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="logoutBtn" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt w-5"></i>
+                        <span class="ml-3">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Subject Management</h2>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
+                <i class="fas fa-plus mr-2"></i>Add New Subject
+            </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search subjects...">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Teacher</label>
+                    <select id="teacherFilter" class="form-select">
+                        <option value="">All Teachers</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button id="resetFilters" class="btn btn-secondary w-full">
+                        <i class="fas fa-undo mr-2"></i>Reset Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subjects Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="subjectsGrid">
+            <!-- Subjects will be loaded here -->
+            <div class="animate-pulse">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div class="space-y-3 mt-4">
+                        <div class="h-4 bg-gray-200 rounded"></div>
+                        <div class="h-4 bg-gray-200 rounded"></div>
+                        <div class="h-4 bg-gray-200 rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-6">
+            <nav id="pagination" aria-label="Page navigation">
+                <!-- Pagination will be loaded here -->
+            </nav>
+        </div>
+    </main>
+
+    <!-- Add/Edit Subject Modal -->
+    <div class="modal fade" id="addSubjectModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Add New Subject</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="subjectForm">
+                        <input type="hidden" id="subjectId">
+                        <div class="mb-3">
+                            <label class="form-label">Subject Name</label>
+                            <input type="text" id="subjectName" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea id="description" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Assigned Teachers</label>
+                            <select id="teacherSelect" class="form-select" multiple>
+                                <!-- Teachers will be loaded here -->
+                            </select>
+                            <small class="text-muted">Hold Ctrl/Cmd to select multiple teachers</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveSubject">Save Subject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Subject</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this subject? This will also remove all associated materials and quizzes.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (required for Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        let currentPage = 1;
+        let currentSubjectId = null;
+        const addSubjectModal = new bootstrap.Modal(document.getElementById('addSubjectModal'));
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Initialize Select2
+            $('#teacherSelect').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select teachers'
+            });
+
+            // Load initial data
+            loadSubjects();
+            loadTeachers();
+
+            // Setup event listeners
+            document.getElementById('searchInput').addEventListener('input', debounce(loadSubjects, 500));
+            document.getElementById('teacherFilter').addEventListener('change', loadSubjects);
+            document.getElementById('resetFilters').addEventListener('click', resetFilters);
+            document.getElementById('saveSubject').addEventListener('click', saveSubject);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+
+            // Setup form validation
+            setupFormValidation();
+        });
+
+        async function loadSubjects() {
+            try {
+                const search = document.getElementById('searchInput').value;
+                const teacherId = document.getElementById('teacherFilter').value;
+
+                const response = await fetch(`/api/subjects?search=${search}&teacher_id=${teacherId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    renderSubjects(data.data.subjects);
+                    renderPagination(data.data.pagination);
+                } else {
+                    throw new Error(data.message);
+                }
+
+            } catch (error) {
+                showAlert('error', 'Failed to load subjects: ' + error.message);
+            }
+        }
+
+        async function loadTeachers() {
+            try {
+                const response = await fetch('/api/users?role=guru', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    const teachers = data.data.users;
+                    const teacherSelect = document.getElementById('teacherSelect');
+                    const teacherFilter = document.getElementById('teacherFilter');
+
+                    const options = teachers.map(teacher => 
+                        `<option value="${teacher.id}">${teacher.full_name} (${teacher.nip})</option>`
+                    ).join('');
+
+                    teacherSelect.innerHTML = options;
+                    teacherFilter.innerHTML = `<option value="">All Teachers</option>${options}`;
+                }
+
+            } catch (error) {
+                showAlert('error', 'Failed to load teachers: ' + error.message);
+            }
+        }
+
+        function renderSubjects(subjects) {
+            const grid = document.getElementById('subjectsGrid');
+            grid.innerHTML = subjects.map(subject => `
+                <div class="subject-card bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">${subject.name}</h3>
+                            <div class="flex space-x-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="editSubject(${subject.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject(${subject.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">${subject.description}</p>
+                        <div class="border-t pt-4">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2">Assigned Teachers</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${subject.teachers.map(teacher => `
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                                        ${teacher.full_name}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-between text-sm text-gray-500">
+                            <span>${subject.material_count} Materials</span>
+                            <span>${subject.quiz_count} Quizzes</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPagination(pagination) {
+            const nav = document.getElementById('pagination');
+            const totalPages = Math.ceil(pagination.total / pagination.limit);
+            
+            let html = '<ul class="pagination mb-0">';
+            
+            // Previous button
+            html += `
+                <li class="page-item ${pagination.page === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${pagination.page - 1})">Previous</a>
+                </li>
+            `;
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                html += `
+                    <li class="page-item ${pagination.page === i ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                    </li>
+                `;
+            }
+            
+            // Next button
+            html += `
+                <li class="page-item ${pagination.page === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${pagination.page + 1})">Next</a>
+                </li>
+            `;
+            
+            html += '</ul>';
+            nav.innerHTML = html;
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            loadSubjects();
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('teacherFilter').value = '';
+            currentPage = 1;
+            loadSubjects();
+        }
+
+        async function saveSubject() {
+            try {
+                const subjectData = {
+                    name: document.getElementById('subjectName').value,
+                    description: document.getElementById('description').value,
+                    teacher_ids: Array.from(document.getElementById('teacherSelect').selectedOptions).map(option => option.value)
+                };
+
+                const url = currentSubjectId ? `/api/subjects/${currentSubjectId}` : '/api/subjects';
+                const method = currentSubjectId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(subjectData)
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    addSubjectModal.hide();
+                    loadSubjects();
+                    showAlert('success', `Subject ${currentSubjectId ? 'updated' : 'created'} successfully`);
+                } else {
+                    throw new Error(data.message);
+                }
+
+            } catch (error) {
+                showAlert('error', error.message);
+            }
+        }
+
+        function editSubject(subjectId) {
+            currentSubjectId = subjectId;
+            document.getElementById('modalTitle').textContent = 'Edit Subject';
+            
+            fetch(`/api/subjects/${subjectId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const subject = data.data;
+                    document.getElementById('subjectName').value = subject.name;
+                    document.getElementById('description').value = subject.description;
+                    
+                    // Set selected teachers
+                    const teacherSelect = document.getElementById('teacherSelect');
+                    const teacherIds = subject.teachers.map(teacher => teacher.id.toString());
+                    Array.from(teacherSelect.options).forEach(option => {
+                        option.selected = teacherIds.includes(option.value);
+                    });
+                    
+                    $(teacherSelect).trigger('change'); // Update Select2
+                    addSubjectModal.show();
+                }
+            })
+            .catch(error => showAlert('error', error.message));
+        }
+
+        function deleteSubject(subjectId) {
+            currentSubjectId = subjectId;
+            deleteModal.show();
+            
+            document.getElementById('confirmDelete').onclick = async function() {
+                try {
+                    const response = await fetch(`/api/subjects/${subjectId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        deleteModal.hide();
+                        loadSubjects();
+                        showAlert('success', 'Subject deleted successfully');
+                    } else {
+                        throw new Error(data.message);
+                    }
+
+                } catch (error) {
+                    showAlert('error', error.message);
+                }
+            };
+        }
+
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show fixed-top m-3`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        function setupFormValidation() {
+            const form = document.getElementById('subjectForm');
+            const saveButton = document.getElementById('saveSubject');
+
+            form.addEventListener('input', () => {
+                const isValid = form.checkValidity();
+                saveButton.disabled = !isValid;
+            });
+
+            // Reset form when modal is closed
+            document.getElementById('addSubjectModal').addEventListener('hidden.bs.modal', () => {
+                form.reset();
+                currentSubjectId = null;
+                document.getElementById('modalTitle').textContent = 'Add New Subject';
+                $('#teacherSelect').val(null).trigger('change');
+            });
+        }
+    </script>
+</body>
+</html>
