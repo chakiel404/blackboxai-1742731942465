@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Dark application theme -->
+    <style name="Theme.SmartApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/primary_light</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/black</item>
+
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">@color/secondary_light</item>
+        <item name="colorSecondaryVariant">@color/secondary_dark</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+
+        <!-- Surface colors -->
+        <item name="colorSurface">#121212</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorSurfaceVariant">#1E1E1E</item>
+
+        <!-- Background colors -->
+        <item name="android:colorBackground">#000000</item>
+        <item name="colorOnBackground">@color/white</item>
+
+        <!-- Error colors -->
+        <item name="colorError">@color/error_variant</item>
+        <item name="colorErrorContainer">@color/error</item>
+        <item name="colorOnError">@color/black</item>
+
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">#B3FFFFFF</item>
+        <item name="android:textColorHint">#80FFFFFF</item>
+
+        <!-- Shape appearance -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.SmartApp.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.SmartApp.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.SmartApp.LargeComponent</item>
+
+        <!-- Widget styles -->
+        <item name="materialButtonStyle">@style/Widget.SmartApp.Button.Dark</item>
+        <item name="materialCardViewStyle">@style/Widget.SmartApp.CardView.Dark</item>
+        <item name="textInputStyle">@style/Widget.SmartApp.TextInputLayout.Dark</item>
+        <item name="chipStyle">@style/Widget.SmartApp.Chip.Dark</item>
+        <item name="bottomNavigationStyle">@style/Widget.SmartApp.BottomNavigation.Dark</item>
+        <item name="toolbarStyle">@style/Widget.SmartApp.Toolbar.Dark</item>
+    </style>
+
+    <!-- Widget Styles -->
+    <style name="Widget.SmartApp.Button.Dark" parent="Widget.MaterialComponents.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:paddingStart">@dimen/spacing_large</item>
+        <item name="android:paddingEnd">@dimen/spacing_large</item>
+        <item name="rippleColor">@color/ripple_dark</item>
+    </style>
+
+    <style name="Widget.SmartApp.Button.OutlinedButton.Dark" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:paddingStart">@dimen/spacing_large</item>
+        <item name="android:paddingEnd">@dimen/spacing_large</item>
+        <item name="rippleColor">@color/ripple_dark</item>
+        <item name="strokeColor">@color/white</item>
+    </style>
+
+    <style name="Widget.SmartApp.CardView.Dark" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
+    </style>
+
+    <style name="Widget.SmartApp.TextInputLayout.Dark" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/spacing_small</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/spacing_small</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/spacing_small</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/spacing_small</item>
+        <item name="boxStrokeColor">@color/white</item>
+        <item name="hintTextColor">@color/white</item>
+    </style>
+
+    <style name="Widget.SmartApp.Chip.Dark" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="chipMinHeight">32dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="chipBackgroundColor">?attr/colorSurfaceVariant</item>
+        <item name="rippleColor">@color/ripple_dark</item>
+    </style>
+
+    <style name="Widget.SmartApp.BottomNavigation.Dark" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="elevation">8dp</item>
+        <item name="itemIconTint">@color/primary_light</item>
+        <item name="itemTextColor">@color/primary_light</item>
+        <item name="itemRippleColor">@color/ripple_dark</item>
+        <item name="android:background">?attr/colorSurface</item>
+    </style>
+
+    <style name="Widget.SmartApp.Toolbar.Dark" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:elevation">4dp</item>
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="titleTextColor">?attr/colorOnSurface</item>
+        <item name="subtitleTextColor">?android:textColorSecondary</item>
+    </style>
+</resources>
