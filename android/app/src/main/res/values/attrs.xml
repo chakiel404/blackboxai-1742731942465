@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- StateView custom attributes -->
+    <declare-styleable name="StateView">
+        <!-- Icon for error state -->
+        <attr name="errorIcon" format="reference" />
+        <!-- Icon for empty state -->
+        <attr name="emptyIcon" format="reference" />
+        <!-- Style for retry button -->
+        <attr name="retryButtonStyle" format="reference" />
+    </declare-styleable>
+
+    <!-- FileUploadView custom attributes -->
+    <declare-styleable name="FileUploadView">
+        <!-- Maximum file size in bytes -->
+        <attr name="maxFileSize" format="integer" />
+        <!-- Allowed file types (comma-separated) -->
+        <attr name="allowedFileTypes" format="string" />
+        <!-- Upload button text -->
+        <attr name="uploadButtonText" format="string" />
+        <!-- Upload button style -->
+        <attr name="uploadButtonStyle" format="reference" />
+        <!-- File info background -->
+        <attr name="fileInfoBackground" format="reference" />
+        <!-- Show file type icon -->
+        <attr name="showFileTypeIcon" format="boolean" />
+        <!-- Show file size -->
+        <attr name="showFileSize" format="boolean" />
+    </declare-styleable>
+
+    <!-- Common custom attributes -->
+    <attr name="iconTint" format="color" />
+    <attr name="cornerRadius" format="dimension" />
+    <attr name="strokeWidth" format="dimension" />
+    <attr name="strokeColor" format="color" />
+    <attr name="rippleColor" format="color" />
+    <attr name="backgroundColor" format="color" />
+    <attr name="textColor" format="color" />
+    <attr name="textSize" format="dimension" />
+    <attr name="textStyle" format="flags">
+        <flag name="normal" value="0" />
+        <flag name="bold" value="1" />
+        <flag name="italic" value="2" />
+    </attr>
+    <attr name="fontFamily" format="string" />
+    <attr name="elevation" format="dimension" />
+    <attr name="padding" format="dimension" />
+    <attr name="margin" format="dimension" />
+    <attr name="android:minHeight" />
+    <attr name="android:minWidth" />
+    <attr name="android:maxHeight" />
+    <attr name="android:maxWidth" />
+</resources>
