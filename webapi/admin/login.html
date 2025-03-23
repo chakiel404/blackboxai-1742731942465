@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartApp Admin Login</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-primary {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        .btn-primary:hover {
+            background-color: #5a67d8;
+            border-color: #5a67d8;
+        }
+        .login-animation {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="login-card p-4 p-md-5 login-animation">
+                    <!-- Logo and Title -->
+                    <div class="text-center mb-4">
+                        <div class="mb-3">
+                            <i class="fas fa-graduation-cap text-5xl text-indigo-600"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold text-gray-800">SmartApp Admin</h1>
+                        <p class="text-gray-600">Sign in to your account</p>
+                    </div>
+
+                    <!-- Alert for error messages -->
+                    <div class="alert alert-danger alert-dismissible fade show d-none" role="alert" id="errorAlert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <span id="errorMessage"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm" class="space-y-4">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-semibold mb-2" for="username">
+                                Username
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-gray-50 border-gray-300">
+                                    <i class="fas fa-user text-gray-500"></i>
+                                </span>
+                                <input type="text" 
+                                       class="form-control border-gray-300" 
+                                       id="username" 
+                                       name="username" 
+                                       placeholder="Enter your username"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-semibold mb-2" for="password">
+                                Password
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-gray-50 border-gray-300">
+                                    <i class="fas fa-lock text-gray-500"></i>
+                                </span>
+                                <input type="password" 
+                                       class="form-control border-gray-300" 
+                                       id="password" 
+                                       name="password" 
+                                       placeholder="Enter your password"
+                                       required>
+                                <button type="button" 
+                                        class="btn btn-outline-secondary" 
+                                        id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <input type="checkbox" 
+                                       class="form-check-input border-gray-300" 
+                                       id="remember">
+                                <label class="text-sm text-gray-600 ml-2" for="remember">
+                                    Remember me
+                                </label>
+                            </div>
+                            <a href="#" class="text-sm text-indigo-600 hover:text-indigo-800">
+                                Forgot password?
+                            </a>
+                        </div>
+
+                        <button type="submit" 
+                                class="w-full btn btn-primary py-2 px-4 rounded-lg flex items-center justify-center">
+                            <span id="loginText">Sign In</span>
+                            <span id="loginSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                        </button>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <p class="text-sm text-gray-600">
+                            Need help? Contact <a href="mailto:support@smartapp.com" class="text-indigo-600 hover:text-indigo-800">support</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            const loginText = document.getElementById('loginText');
+            const loginSpinner = document.getElementById('loginSpinner');
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+
+            // Check if user is already logged in
+            const token = localStorage.getItem('token');
+            if (token) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                togglePassword.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+
+            // Handle form submission
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Show loading state
+                loginText.textContent = 'Signing in...';
+                loginSpinner.classList.remove('d-none');
+                errorAlert.classList.add('d-none');
+
+                try {
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: document.getElementById('username').value,
+                            password: document.getElementById('password').value
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        // Store token and redirect
+                        localStorage.setItem('token', data.data.token);
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        throw new Error(data.message || 'Invalid credentials');
+                    }
+
+                } catch (error) {
+                    // Show error message
+                    errorMessage.textContent = error.message;
+                    errorAlert.classList.remove('d-none');
+                    
+                    // Reset loading state
+                    loginText.textContent = 'Sign In';
+                    loginSpinner.classList.add('d-none');
+                }
+            });
+
+            // Remember me functionality
+            const rememberCheckbox = document.getElementById('remember');
+            const rememberedUsername = localStorage.getItem('rememberedUsername');
+            
+            if (rememberedUsername) {
+                document.getElementById('username').value = rememberedUsername;
+                rememberCheckbox.checked = true;
+            }
+
+            rememberCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    localStorage.setItem('rememberedUsername', document.getElementById('username').value);
+                } else {
+                    localStorage.removeItem('rememberedUsername');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
